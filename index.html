@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CHEM 101: Introduction to Molecular Orbital (MO) Theory</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono for electron configurations -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              900: '#0f172a',
+              800: '#1e293b',
+              700: '#334155',
+              600: '#4f46e5',
+              500: '#6366f1',
+              100: '#e0e7ff',
+              50: '#eef2ff',
+            },
+            bonding: {
+              DEFAULT: '#0d9488',
+              light: '#ccfbf1',
+              dark: '#115e59',
+            },
+            antibonding: {
+              DEFAULT: '#e11d48',
+              light: '#ffe4e6',
+              dark: '#9f1239',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom styling for orbital phase graphics and smooth transitions */
+    .tab-active {
+      background-color: #4f46e5;
+      color: #ffffff;
+      box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.25);
+    }
+    .electron-up {
+      stroke: #1e293b;
+      stroke-width: 2.2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .electron-down {
+      stroke: #4f46e5;
+      stroke-width: 2.2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.85; }
+      50% { opacity: 1; }
+    }
+    .orbital-lobe-plus { fill: #2563eb; }
+    .orbital-lobe-minus { fill: #f59e0b; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-indigo-100 selection:text-indigo-900">
+
+  <!-- Top Academic Course Header -->
+  <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-200 text-xs font-semibold tracking-wider uppercase mb-3">
+            <span>General Chemistry I</span>
+            <span>•</span>
+            <span>Chemical Bonding II</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+            Molecular Orbital (MO) Theory
+          </h1>
+          <p class="mt-2 text-slate-300 max-w-2xl text-base sm:text-lg leading-relaxed">
+            Bridging from localized electron-pair overlap in Valence Bond Theory to delocalized quantum wavefunctions across entire molecules.
+          </p>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-4 text-sm text-slate-200 shrink-0 max-w-xs">
+          <div class="font-semibold text-white mb-1 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            Learning Objectives
+          </div>
+          <ul class="space-y-1 text-xs text-slate-300 list-disc list-inside">
+            <li>Identify key failures of Valence Bond Theory</li>
+            <li>Explain LCAO, bonding &amp; antibonding MOs</li>
+            <li>Construct Period 1 &amp; 2 MO energy diagrams</li>
+            <li>Predict bond order, bond length &amp; magnetism</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sticky Navigation Bar -->
+  <nav class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between py-2.5 overflow-x-auto no-scrollbar gap-2">
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <a href="#module-1" class="nav-pill px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition whitespace-nowrap">
+            1. VB Review &amp; Limits
+          </a>
+          <a href="#module-2" class="nav-pill px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition whitespace-nowrap">
+            2. MO Postulates
+          </a>
+          <a href="#module-3" class="nav-pill px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition whitespace-nowrap">
+            3. MO Explorer &amp; Examples
+          </a>
+          <a href="#module-4" class="nav-pill px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition whitespace-nowrap">
+            4. In-Class Practice
+          </a>
+        </div>
+        <div class="hidden md:flex items-center gap-2 text-xs font-medium text-slate-500">
+          <span>Progress:</span>
+          <div class="w-28 h-2 bg-slate-200 rounded-full overflow-hidden">
+            <div id="scroll-progress" class="h-full bg-indigo-600 transition-all duration-150" style="width: 15%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-16">
+
+    <!-- =====================================================================
+         MODULE 1: REVIEW OF VALENCE BOND (VB) THEORY & ITS LIMITATIONS
+    ====================================================================== -->
+    <section id="module-1" class="scroll-mt-20 space-y-8">
+      <div class="border-l-4 border-indigo-600 pl-4">
+        <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Module 01</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-0.5">Review of Valence Bond (VB) Theory &amp; Its Limitations</h2>
+        <p class="text-slate-600 mt-1">Before introducing a new model, let's examine what VB theory gets right—and where experiments prove it incomplete.</p>
+      </div>
+
+      <!-- Quick Recap Banner -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+          <div class="lg:col-span-2 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold uppercase">
+              Quick Recap: What You Just Learned
+            </div>
+            <h3 class="text-xl font-bold text-slate-900">How Valence Bond Theory Views a Covalent Bond</h3>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+              In <strong>Valence Bond (VB) Theory</strong>, a covalent bond forms when two half-filled atomic (or hybrid) orbitals on adjacent atoms overlap in space, pairing their two electrons with opposite spins.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+              <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5">
+                <div class="font-bold text-slate-800 text-sm">Localized Bonds</div>
+                <p class="text-xs text-slate-600 mt-1">Shared electrons stay strictly between the two bonded nuclei.</p>
+              </div>
+              <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5">
+                <div class="font-bold text-slate-800 text-sm">&sigma; and &pi; Overlap</div>
+                <p class="text-xs text-slate-600 mt-1">Head-on overlap gives &sigma; bonds; side-by-side overlap gives &pi; bonds.</p>
+              </div>
+              <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5">
+                <div class="font-bold text-slate-800 text-sm">Hybridization</div>
+                <p class="text-xs text-slate-600 mt-1"><em>sp, sp<sup>2</sup>, sp<sup>3</sup></em> orbitals explain VSEPR 3D shapes nicely.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Simple Localized Overlap SVG -->
+          <div class="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-5 flex flex-col items-center justify-center text-center">
+            <svg viewBox="0 0 260 120" class="w-full max-w-[240px] h-auto" aria-label="Valence Bond 1s overlap in H2">
+              <!-- Left 1s -->
+              <circle cx="95" cy="60" r="42" fill="#6366f1" fill-opacity="0.2" stroke="#4f46e5" stroke-width="2" />
+              <!-- Right 1s -->
+              <circle cx="165" cy="60" r="42" fill="#0d9488" fill-opacity="0.2" stroke="#0d9488" stroke-width="2" />
+              <!-- Overlap zone highlight -->
+              <path d="M 130 33.5 A 42 42 0 0 1 130 86.5 A 42 42 0 0 1 130 33.5 Z" fill="#4f46e5" fill-opacity="0.28" />
+              <!-- Nuclei -->
+              <circle cx="95" cy="60" r="4" fill="#1e293b" />
+              <text x="95" y="77" text-anchor="middle" font-size="11" font-weight="700" fill="#1e293b">H<tspan dy="2" font-size="8">A</tspan></text>
+              <circle cx="165" cy="60" r="4" fill="#1e293b" />
+              <text x="165" y="77" text-anchor="middle" font-size="11" font-weight="700" fill="#1e293b">H<tspan dy="2" font-size="8">B</tspan></text>
+              <!-- Paired spins in overlap -->
+              <path d="M 127 66 L 127 52 M 124 55 L 127 52 L 130 55" stroke="#0f172a" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <path d="M 133 52 L 133 66 M 130 63 L 133 66 L 136 63" stroke="#e11d48" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+            <p class="text-xs font-semibold text-indigo-950 mt-2">VB Model of H<sub>2</sub>: 1s–1s Localized Overlap</p>
+            <p class="text-[11px] text-indigo-700 mt-0.5">Works great for H<sub>2</sub>, CH<sub>4</sub>, H<sub>2</sub>O—but fails elsewhere!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Tabs: Where VB Theory Falls Short -->
+      <div class="space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-rose-100 text-rose-600 text-xs font-extrabold">!</span>
+            Four Key Limitations: Where Valence Bond Theory Falls Short
+          </h3>
+          <span class="text-xs text-slate-500">Click each failure case to inspect the experimental evidence</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" id="vb-limitation-tabs">
+          <button onclick="selectLimitation(0)" data-lim="0" class="lim-btn text-left p-4 rounded-2xl border-2 border-indigo-600 bg-white shadow-sm transition">
+            <div class="text-xs font-bold uppercase tracking-wider text-rose-600 mb-1">Failure #1 • Classic Paradox</div>
+            <div class="font-bold text-slate-900 text-base">Paramagnetism of O<sub>2</sub></div>
+            <p class="text-xs text-slate-500 mt-1">Liquid O<sub>2</sub> sticks to a magnet despite having an even number of electrons.</p>
+          </button>
+
+          <button onclick="selectLimitation(1)" data-lim="1" class="lim-btn text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-indigo-300 transition">
+            <div class="text-xs font-bold uppercase tracking-wider text-amber-600 mb-1">Failure #2 • Patchwork Fix</div>
+            <div class="font-bold text-slate-900 text-base">Delocalized Resonance</div>
+            <p class="text-xs text-slate-500 mt-1">Benzene, O<sub>3</sub>, and CO<sub>3</sub><sup>2−</sup> require artificial resonance hybrids.</p>
+          </button>
+
+          <button onclick="selectLimitation(2)" data-lim="2" class="lim-btn text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-indigo-300 transition">
+            <div class="text-xs font-bold uppercase tracking-wider text-purple-600 mb-1">Failure #3 • Electron Count</div>
+            <div class="font-bold text-slate-900 text-base">Odd-e<sup>−</sup> &amp; Deficient Species</div>
+            <p class="text-xs text-slate-500 mt-1">Stable 1-electron bonds like H<sub>2</sub><sup>+</sup> and 3-center bonds in B<sub>2</sub>H<sub>6</sub>.</p>
+          </button>
+
+          <button onclick="selectLimitation(3)" data-lim="3" class="lim-btn text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-indigo-300 transition">
+            <div class="text-xs font-bold uppercase tracking-wider text-sky-600 mb-1">Failure #4 • Color &amp; Light</div>
+            <div class="font-bold text-slate-900 text-base">Excited States &amp; UV-Vis</div>
+            <p class="text-xs text-slate-500 mt-1">VB lacks empty antibonding orbitals to explain light absorption.</p>
+          </button>
+        </div>
+
+        <!-- Detailed Panel for Selected Limitation -->
+        <div id="vb-limitation-detail" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 transition-all">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         MODULE 2: POSTULATES & CORE PRINCIPLES OF MO THEORY
+    ====================================================================== -->
+    <section id="module-2" class="scroll-mt-20 space-y-8">
+      <div class="border-l-4 border-teal-600 pl-4">
+        <span class="text-xs font-bold uppercase tracking-wider text-teal-600">Module 02</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-0.5">Postulates &amp; Core Principles of MO Theory</h2>
+        <p class="text-slate-600 mt-1">Instead of gluing atoms together with localized pairs, MO Theory solves the Schrödinger equation for the <em>entire molecule</em>.</p>
+      </div>
+
+      <!-- 5 Core Postulates Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Postulate 1 -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 font-extrabold flex items-center justify-center text-sm mb-4">1</div>
+            <h3 class="text-lg font-bold text-slate-900">Molecular Delocalization</h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              Just as electrons in atoms occupy <strong>Atomic Orbitals (AOs)</strong> around one nucleus, electrons in molecules occupy <strong>Molecular Orbitals (MOs)</strong> that spread across <em>multiple nuclei</em> simultaneously.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-indigo-700 font-medium">
+            Key shift: Electrons belong to the whole molecule, not a single bond.
+          </div>
+        </div>
+
+        <!-- Postulate 2 -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="w-9 h-9 rounded-xl bg-teal-100 text-teal-700 font-extrabold flex items-center justify-center text-sm mb-4">2</div>
+            <h3 class="text-lg font-bold text-slate-900">LCAO &amp; Conservation of Orbitals</h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              MOs are approximated via <strong>Linear Combination of Atomic Orbitals (LCAO)</strong>—adding and subtracting atomic wavefunctions (&psi;<sub>A</sub> &plusmn; &psi;<sub>B</sub>).
+            </p>
+            <div class="mt-3 bg-teal-50 border border-teal-200 rounded-xl p-2.5 text-center font-mono text-xs font-bold text-teal-900">
+              N Atomic Orbitals &rarr; N Molecular Orbitals
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-teal-700 font-medium">
+            Orbitals are never created or destroyed—only combined!
+          </div>
+        </div>
+
+        <!-- Postulate 3 -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 font-extrabold flex items-center justify-center text-sm mb-4">3</div>
+            <h3 class="text-lg font-bold text-slate-900">Energy &amp; Symmetry Matching</h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              Atomic orbitals combine effectively only when two conditions are met:
+            </p>
+            <ul class="mt-2 space-y-1.5 text-xs text-slate-700">
+              <li class="flex items-start gap-2">
+                <span class="text-amber-600 font-bold">✓</span>
+                <span><strong>Similar Energy:</strong> 1s mixes with 1s, not 2s (unless close in energy like 2s–2p).</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-amber-600 font-bold">✓</span>
+                <span><strong>Compatible Symmetry:</strong> Wave lobes must align with matching symmetry along the internuclear axis.</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-amber-700 font-medium">
+            Orthogonal orbitals (e.g., s + p<sub>x</sub>) have zero net overlap.
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual Wave Interference & Bonding vs Antibonding Comparison -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Principle 4 • Quantum Wave Interference</span>
+            <h3 class="text-xl font-bold text-slate-900 mt-0.5">Bonding vs. Antibonding Molecular Orbitals</h3>
+            <p class="text-sm text-slate-600 mt-1">Electrons behave as standing waves with mathematical phases (+ and −). Combining two AOs yields one lower-energy bonding MO and one higher-energy antibonding MO.</p>
+          </div>
+          <div class="flex items-center gap-4 text-xs shrink-0">
+            <span class="inline-flex items-center gap-1.5 font-medium text-slate-700"><span class="w-3 h-3 rounded-full bg-blue-600"></span> (+) Wave Phase</span>
+            <span class="inline-flex items-center gap-1.5 font-medium text-slate-700"><span class="w-3 h-3 rounded-full bg-amber-500"></span> (−) Wave Phase</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Sigma Overlap Card -->
+          <div class="bg-slate-50 rounded-2xl border border-slate-200 p-5 space-y-4">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold text-slate-900 text-base">Head-On Overlap: &sigma; and &sigma;* Orbitals (from 1s or 2p<sub>z</sub>)</h4>
+              <span class="text-xs font-mono bg-slate-200/80 text-slate-700 px-2 py-0.5 rounded">Cylindrical Symmetry</span>
+            </div>
+
+            <!-- SVG for Sigma and Sigma* -->
+            <svg viewBox="0 0 460 210" class="w-full h-auto bg-white rounded-xl border border-slate-200/80 p-2">
+              <!-- Antibonding Sigma* (Top) -->
+              <text x="14" y="24" font-size="11" font-weight="700" fill="#e11d48">Destructive Interference (&psi;<tspan dy="2" font-size="8">A</tspan><tspan dy="-2"> − &psi;</tspan><tspan dy="2" font-size="8">B</tspan><tspan dy="-2">) → &sigma;* (Antibonding)</tspan></text>
+              <!-- Left AO (+) -->
+              <circle cx="65" cy="62" r="22" fill="#2563eb" fill-opacity="0.85" />
+              <text x="65" y="66" text-anchor="middle" fill="white" font-weight="700" font-size="13">+</text>
+              <text x="103" y="66" text-anchor="middle" fill="#475569" font-weight="700" font-size="14">−</text>
+              <!-- Right AO (+) -->
+              <circle cx="140" cy="62" r="22" fill="#2563eb" fill-opacity="0.85" />
+              <text x="140" y="66" text-anchor="middle" fill="white" font-weight="700" font-size="13">+</text>
+              <text x="182" y="66" text-anchor="middle" fill="#475569" font-weight="700" font-size="16">→</text>
+
+              <!-- Resulting Sigma* lobes pushed outward -->
+              <ellipse cx="242" cy="62" rx="26" ry="21" fill="#2563eb" fill-opacity="0.9" />
+              <circle cx="252" cy="62" r="3" fill="white" />
+              <text x="236" y="66" text-anchor="middle" fill="white" font-weight="700" font-size="12">+</text>
+
+              <!-- Nodal plane dashed line -->
+              <line x1="280" y1="32" x2="280" y2="94" stroke="#e11d48" stroke-width="2" stroke-dasharray="4 3" />
+              <text x="280" y="104" text-anchor="middle" fill="#e11d48" font-size="9" font-weight="700">Nodal Plane (0 e⁻ density)</text>
+
+              <ellipse cx="318" cy="62" rx="26" ry="21" fill="#f59e0b" fill-opacity="0.9" />
+              <circle cx="308" cy="62" r="3" fill="white" />
+              <text x="324" y="66" text-anchor="middle" fill="white" font-weight="700" font-size="14">−</text>
+
+              <text x="360" y="58" font-size="10" fill="#9f1239" font-weight="600">Higher Energy</text>
+              <text x="360" y="71" font-size="9.5" fill="#64748b">Nuclei repel each other</text>
+
+              <line x1="12" y1="114" x2="448" y2="114" stroke="#e2e8f0" stroke-width="1" />
+
+              <!-- Bonding Sigma (Bottom) -->
+              <text x="14" y="133" font-size="11" font-weight="700" fill="#0d9488">Constructive Interference (&psi;<tspan dy="2" font-size="8">A</tspan><tspan dy="-2"> + &psi;</tspan><tspan dy="2" font-size="8">B</tspan><tspan dy="-2">) → &sigma; (Bonding)</tspan></text>
+              <!-- Left AO (+) -->
+              <circle cx="65" cy="170" r="22" fill="#2563eb" fill-opacity="0.85" />
+              <text x="65" y="174" text-anchor="middle" fill="white" font-weight="700" font-size="13">+</text>
+              <text x="103" y="174" text-anchor="middle" fill="#475569" font-weight="700" font-size="14">+</text>
+              <!-- Right AO (+) -->
+              <circle cx="140" cy="170" r="22" fill="#2563eb" fill-opacity="0.85" />
+              <text x="140" y="174" text-anchor="middle" fill="white" font-weight="700" font-size="13">+</text>
+              <text x="182" y="174" text-anchor="middle" fill="#475569" font-weight="700" font-size="16">→</text>
+
+              <!-- Resulting Sigma pill shape -->
+              <rect x="226" y="146" width="108" height="48" rx="24" fill="#2563eb" fill-opacity="0.9" />
+              <circle cx="255" cy="170" r="3" fill="white" />
+              <circle cx="305" cy="170" r="3" fill="white" />
+              <text x="280" y="174" text-anchor="middle" fill="white" font-weight="700" font-size="13">+</text>
+              <text x="280" y="204" text-anchor="middle" fill="#0f766e" font-size="9" font-weight="700">High e⁻ density between nuclei</text>
+
+              <text x="352" y="166" font-size="10" fill="#115e59" font-weight="600">Lower Energy</text>
+              <text x="352" y="179" font-size="9.5" fill="#64748b">Glues nuclei together</text>
+            </svg>
+          </div>
+
+          <!-- Pi Overlap Card -->
+          <div class="bg-slate-50 rounded-2xl border border-slate-200 p-5 space-y-4">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold text-slate-900 text-base">Side-by-Side Overlap: &pi; and &pi;* Orbitals (from 2p<sub>x</sub>, 2p<sub>y</sub>)</h4>
+              <span class="text-xs font-mono bg-slate-200/80 text-slate-700 px-2 py-0.5 rounded">2 Degenerate Sets</span>
+            </div>
+
+            <!-- SVG for Pi and Pi* -->
+            <svg viewBox="0 0 460 210" class="w-full h-auto bg-white rounded-xl border border-slate-200/80 p-2">
+              <!-- Antibonding Pi* (Top) -->
+              <text x="14" y="24" font-size="11" font-weight="700" fill="#e11d48">Out-of-Phase Side Overlap → &pi;* (Antibonding)</text>
+              <!-- Left 2p -->
+              <ellipse cx="65" cy="48" rx="10" ry="15" fill="#2563eb" />
+              <ellipse cx="65" cy="78" rx="10" ry="15" fill="#f59e0b" />
+              <circle cx="65" cy="63" r="2.5" fill="#1e293b" />
+              <text x="100" y="67" text-anchor="middle" fill="#475569" font-weight="700" font-size="13">+</text>
+              <!-- Right 2p inverted -->
+              <ellipse cx="135" cy="48" rx="10" ry="15" fill="#f59e0b" />
+              <ellipse cx="135" cy="78" rx="10" ry="15" fill="#2563eb" />
+              <circle cx="135" cy="63" r="2.5" fill="#1e293b" />
+              <text x="176" y="67" text-anchor="middle" fill="#475569" font-weight="700" font-size="16">→</text>
+
+              <!-- Resulting Pi* 4-lobe clover -->
+              <ellipse cx="246" cy="46" rx="15" ry="13" transform="rotate(-20 246 46)" fill="#2563eb" />
+              <ellipse cx="246" cy="80" rx="15" ry="13" transform="rotate(20 246 80)" fill="#f59e0b" />
+              <ellipse cx="314" cy="46" rx="15" ry="13" transform="rotate(20 314 46)" fill="#f59e0b" />
+              <ellipse cx="314" cy="80" rx="15" ry="13" transform="rotate(-20 314 80)" fill="#2563eb" />
+              <circle cx="254" cy="63" r="3" fill="#1e293b" />
+              <circle cx="306" cy="63" r="3" fill="#1e293b" />
+              <!-- Vertical & horizontal nodes -->
+              <line x1="280" y1="30" x2="280" y2="96" stroke="#e11d48" stroke-width="1.8" stroke-dasharray="3 3" />
+              <line x1="224" y1="63" x2="336" y2="63" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2 2" />
+              <text x="280" y="105" text-anchor="middle" fill="#e11d48" font-size="9" font-weight="700">2 Nodal Planes (4 Lobes)</text>
+
+              <text x="352" y="58" font-size="10" fill="#9f1239" font-weight="600">Highest Energy</text>
+              <text x="352" y="71" font-size="9.5" fill="#64748b">Antibonding &pi;*</text>
+
+              <line x1="12" y1="114" x2="448" y2="114" stroke="#e2e8f0" stroke-width="1" />
+
+              <!-- Bonding Pi (Bottom) -->
+              <text x="14" y="133" font-size="11" font-weight="700" fill="#0d9488">In-Phase Side Overlap → &pi; (Bonding)</text>
+              <!-- Left 2p -->
+              <ellipse cx="65" cy="156" rx="10" ry="15" fill="#2563eb" />
+              <ellipse cx="65" cy="186" rx="10" ry="15" fill="#f59e0b" />
+              <circle cx="65" cy="171" r="2.5" fill="#1e293b" />
+              <text x="100" y="175" text-anchor="middle" fill="#475569" font-weight="700" font-size="13">+</text>
+              <!-- Right 2p matching -->
+              <ellipse cx="135" cy="156" rx="10" ry="15" fill="#2563eb" />
+              <ellipse cx="135" cy="186" rx="10" ry="15" fill="#f59e0b" />
+              <circle cx="135" cy="171" r="2.5" fill="#1e293b" />
+              <text x="176" y="175" text-anchor="middle" fill="#475569" font-weight="700" font-size="16">→</text>
+
+              <!-- Resulting Pi top and bottom bananas -->
+              <rect x="234" y="142" width="92" height="22" rx="11" fill="#2563eb" />
+              <rect x="234" y="178" width="92" height="22" rx="11" fill="#f59e0b" />
+              <line x1="224" y1="171" x2="336" y2="171" stroke="#64748b" stroke-width="1.2" stroke-dasharray="3 2" />
+              <circle cx="254" cy="171" r="3" fill="#1e293b" />
+              <circle cx="306" cy="171" r="3" fill="#1e293b" />
+              <text x="280" y="208" text-anchor="middle" fill="#0f766e" font-size="9" font-weight="700">Continuous e⁻ density above &amp; below axis</text>
+
+              <text x="352" y="166" font-size="10" fill="#115e59" font-weight="600">Weaker than &sigma;</text>
+              <text x="352" y="179" font-size="9.5" fill="#64748b">Less direct overlap</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Principle 5: Filling Rules, Bond Order & Magnetism -->
+        <div class="bg-indigo-950 text-white rounded-2xl p-6 sm:p-7 grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+          <div class="space-y-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-300">Principle 5 • Populating MOs</span>
+            <h4 class="text-lg font-bold">The Same 3 Quantum Filling Rules</h4>
+            <ul class="text-xs sm:text-sm text-indigo-100 space-y-1.5">
+              <li><strong>1. Aufbau Principle:</strong> Fill MOs from lowest energy to highest energy.</li>
+              <li><strong>2. Pauli Exclusion:</strong> Max 2 electrons per MO, with opposite spins (&uarr;&darr;).</li>
+              <li><strong>3. Hund's Rule:</strong> Place 1 electron with parallel spin (&uarr; &uarr;) in each degenerate MO (like &pi;<sub>2p</sub>) before pairing.</li>
+            </ul>
+          </div>
+
+          <div class="bg-white/10 border border-white/15 rounded-xl p-4 text-center space-y-2">
+            <div class="text-xs font-bold uppercase tracking-wider text-teal-300">Bond Order Formula</div>
+            <div class="font-mono text-base sm:text-lg font-bold text-white bg-slate-900/60 py-2.5 px-3 rounded-lg">
+              BO = &frac12; (Bonding e<sup>&minus;</sup> &minus; Antibonding e<sup>&minus;</sup>)
+            </div>
+            <p class="text-xs text-indigo-200">
+              BO &gt; 0 &rarr; Stable molecule &nbsp;|&nbsp; BO = 0 &rarr; Does not exist<br/>
+              Higher BO = <strong>Shorter</strong> &amp; <strong>Stronger</strong> bond
+            </p>
+          </div>
+
+          <div class="bg-white/10 border border-white/15 rounded-xl p-4 space-y-2">
+            <div class="text-xs font-bold uppercase tracking-wider text-amber-300">Magnetic Behavior</div>
+            <div class="text-xs text-indigo-100 space-y-2">
+              <div class="p-2 rounded-lg bg-amber-500/15 border border-amber-400/30">
+                <strong class="text-amber-300">Paramagnetic:</strong> &ge; 1 unpaired electron (&uarr;). Attracted into a magnetic field.
+              </div>
+              <div class="p-2 rounded-lg bg-sky-500/15 border border-sky-400/30">
+                <strong class="text-sky-300">Diamagnetic:</strong> All electrons paired (&uarr;&darr;). Weakly repelled by a magnetic field.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         MODULE 3: INTERACTIVE MO DIAGRAM EXPLORER & WORKED EXAMPLES
+    ====================================================================== -->
+    <section id="module-3" class="scroll-mt-20 space-y-8">
+      <div class="border-l-4 border-indigo-600 pl-4">
+        <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Module 03</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-0.5">Interactive MO Diagram Explorer &amp; Worked Examples</h2>
+        <p class="text-slate-600 mt-1">Select a diatomic species, step through electron filling one electron at a time or auto-fill, and inspect bond order and magnetism.</p>
+      </div>
+
+      <!-- Interactive MO Diagram Builder Card -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden">
+        <!-- Species Selector Bar -->
+        <div class="bg-slate-900 text-white p-4 sm:p-6 border-b border-slate-800 space-y-4">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div>
+              <h3 class="text-lg font-bold flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-teal-400"></span>
+                Period 1 &amp; Period 2 Molecular Orbital Diagram Builder
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Choose a neutral homonuclear diatomic or ion to compare orbital ordering and electron filling.</p>
+            </div>
+            <!-- Ordering Badge -->
+            <div id="ordering-badge" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-500/20 border border-indigo-400/30 text-xs font-semibold text-indigo-200">
+              Ordering: Z &ge; 8 (No strong s–p mixing)
+            </div>
+          </div>
+
+          <!-- Species Buttons -->
+          <div class="space-y-2">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="text-[11px] uppercase tracking-wider font-bold text-slate-400 mr-1">Period 1:</span>
+              <button onclick="loadSpecies('H2')" data-sp="H2" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-indigo-600 transition">H<sub>2</sub></button>
+              <button onclick="loadSpecies('H2+')" data-sp="H2+" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-indigo-600 transition">H<sub>2</sub><sup>+</sup></button>
+              <button onclick="loadSpecies('He2')" data-sp="He2" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-indigo-600 transition">He<sub>2</sub></button>
+
+              <span class="text-[11px] uppercase tracking-wider font-bold text-slate-400 ml-2 mr-1">Period 2 (Z &le; 7):</span>
+              <button onclick="loadSpecies('Li2')" data-sp="Li2" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-indigo-600 transition">Li<sub>2</sub></button>
+              <button onclick="loadSpecies('Be2')" data-sp="Be2" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-indigo-600 transition">Be<sub>2</sub></button>
+              <button onclick="loadSpecies('B2')" data-sp="B2" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-indigo-600 transition">B<sub>2</sub></button>
+              <button onclick="loadSpecies('C2')" data-sp="C2" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-indigo-600 transition">C<sub>2</sub></button>
+              <button onclick="loadSpecies('N2')" data-sp="N2" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-indigo-600 transition">N<sub>2</sub></button>
+              <button onclick="loadSpecies('N2+')" data-sp="N2+" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-indigo-600 transition">N<sub>2</sub><sup>+</sup></button>
+
+              <span class="text-[11px] uppercase tracking-wider font-bold text-slate-400 ml-2 mr-1">Period 2 (Z &ge; 8):</span>
+              <button onclick="loadSpecies('O2')" data-sp="O2" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white transition">O<sub>2</sub></button>
+              <button onclick="loadSpecies('O2+')" data-sp="O2+" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-indigo-600 transition">O<sub>2</sub><sup>+</sup></button>
+              <button onclick="loadSpecies('O2-')" data-sp="O2-" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-indigo-600 transition">O<sub>2</sub><sup>&minus;</sup></button>
+              <button onclick="loadSpecies('F2')" data-sp="F2" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-indigo-600 transition">F<sub>2</sub></button>
+              <button onclick="loadSpecies('Ne2')" data-sp="Ne2" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-indigo-600 transition">Ne<sub>2</sub></button>
+              <button onclick="loadSpecies('NO')" data-sp="NO" class="sp-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-indigo-600 transition">NO</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two-Column Interactive Workspace -->
+        <div class="grid grid-cols-1 lg:grid-cols-12">
+          <!-- Left 7 Cols: Interactive SVG MO Diagram -->
+          <div class="lg:col-span-7 p-4 sm:p-6 bg-slate-50/70 border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col justify-between">
+            <!-- Step Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div class="flex items-center gap-2">
+                <button onclick="stepElectrons(-1)" class="px-3 py-1.5 rounded-lg bg-white border border-slate-300 hover:bg-slate-100 text-xs font-bold text-slate-700 shadow-sm transition">
+                  &minus; 1 e<sup>&minus;</sup>
+                </button>
+                <button onclick="stepElectrons(1)" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white shadow-sm transition">
+                  + 1 e<sup>&minus;</sup> (Aufbau)
+                </button>
+                <button onclick="fillAllElectrons()" class="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-700 text-xs font-bold text-white shadow-sm transition">
+                  Auto-Fill All
+                </button>
+                <button onclick="clearElectrons()" class="px-3 py-1.5 rounded-lg bg-white border border-slate-300 hover:bg-rose-50 hover:text-rose-600 text-xs font-semibold text-slate-600 transition">
+                  Clear
+                </button>
+              </div>
+              <div class="text-xs font-semibold text-slate-600 bg-white px-3 py-1.5 rounded-lg border border-slate-200">
+                Valence e<sup>&minus;</sup> Placed: <span id="placed-count" class="font-mono font-bold text-indigo-600">12</span> / <span id="target-count" class="font-mono font-bold">12</span>
+              </div>
+            </div>
+
+            <!-- Main MO Energy Level SVG Canvas -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-2 sm:p-4 shadow-inner flex items-center justify-center">
+              <svg id="mo-diagram-svg" viewBox="0 0 540 430" class="w-full max-w-[540px] h-auto select-none" aria-label="Interactive Molecular Orbital Energy Level Diagram">
+                <!-- Dynamically rendered by JS -->
+              </svg>
+            </div>
+
+            <!-- S-P Mixing Explainer Box -->
+            <div id="sp-mixing-note" class="mt-3 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-950 leading-relaxed">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Right 5 Cols: Real-Time Calculated Properties & Experimental Data -->
+          <div class="lg:col-span-5 p-5 sm:p-6 flex flex-col justify-between space-y-5 bg-white">
+            <div class="space-y-4">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Live MO Analysis</span>
+                  <h4 id="sp-title" class="text-2xl font-extrabold text-slate-900 mt-0.5">Dioxygen (O<sub>2</sub>)</h4>
+                </div>
+                <span id="stability-pill" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                  Stable Molecule
+                </span>
+              </div>
+
+              <!-- Valence MO Electron Configuration -->
+              <div class="bg-slate-900 text-slate-100 rounded-xl p-4">
+                <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1">Valence MO Electron Configuration</div>
+                <div id="mo-config-display" class="font-mono text-xs sm:text-sm font-semibold text-teal-300 break-words leading-relaxed">
+                  (&sigma;<sub>2s</sub>)<sup>2</sup> (&sigma;*<sub>2s</sub>)<sup>2</sup> (&sigma;<sub>2p</sub>)<sup>2</sup> (&pi;<sub>2p</sub>)<sup>4</sup> (&pi;*<sub>2p</sub>)<sup>2</sup>
+                </div>
+              </div>
+
+              <!-- Key Metrics Grid -->
+              <div class="grid grid-cols-2 gap-3">
+                <div class="p-3.5 rounded-xl bg-teal-50/70 border border-teal-200">
+                  <div class="text-xs font-semibold text-teal-800">Bonding Electrons</div>
+                  <div id="bonding-e-count" class="text-2xl font-extrabold text-teal-900 font-mono mt-0.5">8</div>
+                </div>
+                <div class="p-3.5 rounded-xl bg-rose-50/70 border border-rose-200">
+                  <div class="text-xs font-semibold text-rose-800">Antibonding Electrons</div>
+                  <div id="antibonding-e-count" class="text-2xl font-extrabold text-rose-900 font-mono mt-0.5">4</div>
+                </div>
+                <div class="p-3.5 rounded-xl bg-indigo-50 border border-indigo-200">
+                  <div class="text-xs font-semibold text-indigo-800">Calculated Bond Order</div>
+                  <div id="bond-order-value" class="text-2xl font-extrabold text-indigo-900 font-mono mt-0.5">2.0</div>
+                  <div id="bond-order-math" class="text-[11px] font-mono text-indigo-600 mt-0.5">&frac12;(8 &minus; 4) = 2</div>
+                </div>
+                <div id="magnetism-card" class="p-3.5 rounded-xl bg-amber-50 border border-amber-200">
+                  <div class="text-xs font-semibold text-amber-800">Magnetic Behavior</div>
+                  <div id="magnetism-value" class="text-lg font-extrabold text-amber-900 mt-0.5">Paramagnetic</div>
+                  <div id="unpaired-count" class="text-[11px] font-semibold text-amber-700 mt-0.5">2 unpaired e<sup>&minus;</sup></div>
+                </div>
+              </div>
+
+              <!-- Experimental Benchmark & Interpretation -->
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-500">Experimental Data &amp; Interpretation</div>
+                <div id="exp-metrics" class="flex flex-wrap gap-3 text-xs font-mono font-semibold text-slate-800">
+                  <!-- Populated by JS -->
+                </div>
+                <p id="sp-interpretation" class="text-xs sm:text-sm text-slate-600 leading-relaxed pt-1">
+                  <!-- Populated by JS -->
+                </p>
+              </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
+              <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-teal-600 inline-block"></span> Bonding MO (&sigma;, &pi;)</span>
+              <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-rose-600 inline-block"></span> Antibonding MO (&sigma;*, &pi;*)</span>
+              <span class="flex items-center gap-1.5"><span class="font-mono font-bold text-slate-800">&uarr;&darr;</span> Paired Spin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           WORKED EXAMPLES (3 STEP-BY-STEP WALKTHROUGHS)
+      ==================================================================== -->
+      <div class="space-y-4 pt-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Guided Walkthroughs</span>
+          <h3 class="text-xl sm:text-2xl font-bold text-slate-900">Step-by-Step Worked Examples</h3>
+          <p class="text-sm text-slate-600 mt-0.5">Follow the 4-step MO problem-solving method: (1) Count valence e<sup>&minus;</sup>, (2) Pick energy ordering, (3) Fill MOs via Aufbau/Hund, (4) Compute Bond Order &amp; Magnetism.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Worked Example 1 -->
+          <article class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-teal-100 text-teal-800 text-xs font-bold">Worked Example 1</span>
+                <span class="text-xs font-mono text-slate-400">Period 1</span>
+              </div>
+              <h4 class="text-lg font-bold text-slate-900">Why Does H<sub>2</sub> Exist While He<sub>2</sub> Does Not?</h4>
+              <div class="text-xs sm:text-sm text-slate-600 space-y-2.5 leading-relaxed">
+                <p><strong>Step 1 (Valence e<sup>&minus;</sup>):</strong><br/>
+                • H<sub>2</sub>: 1 + 1 = <strong>2 valence e<sup>&minus;</sup></strong><br/>
+                • He<sub>2</sub>: 2 + 2 = <strong>4 valence e<sup>&minus;</sup></strong></p>
+
+                <p><strong>Step 2 &amp; 3 (MO Filling):</strong><br/>
+                Two 1s AOs combine to form &sigma;<sub>1s</sub> (bonding) and &sigma;*<sub>1s</sub> (antibonding).<br/>
+                • H<sub>2</sub>: <span class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">(&sigma;<sub>1s</sub>)<sup>2</sup></span><br/>
+                • He<sub>2</sub>: <span class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">(&sigma;<sub>1s</sub>)<sup>2</sup>(&sigma;*<sub>1s</sub>)<sup>2</sup></span></p>
+
+                <p><strong>Step 4 (Bond Order &amp; Conclusion):</strong><br/>
+                • BO(H<sub>2</sub>) = &frac12;(2 &minus; 0) = <strong>1.0</strong> (Single bond, diamagnetic, stable).<br/>
+                • BO(He<sub>2</sub>) = &frac12;(2 &minus; 2) = <strong>0</strong>. Because antibonding destabilization slightly exceeds bonding stabilization, He<sub>2</sub> has zero net bond and falls apart!</p>
+              </div>
+            </div>
+            <button onclick="loadSpecies('He2'); document.getElementById('module-3').scrollIntoView({behavior:'smooth'});" class="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-indigo-50 text-indigo-700 font-semibold text-xs transition">
+              Load He<sub>2</sub> in Explorer &uarr;
+            </button>
+          </article>
+
+          <!-- Worked Example 2 -->
+          <article class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-indigo-100 text-indigo-800 text-xs font-bold">Worked Example 2</span>
+                <span class="text-xs font-mono text-slate-400">Z &ge; 8</span>
+              </div>
+              <h4 class="text-lg font-bold text-slate-900">Solving the O<sub>2</sub> Paramagnetism Paradox</h4>
+              <div class="text-xs sm:text-sm text-slate-600 space-y-2.5 leading-relaxed">
+                <p><strong>Step 1 (Valence e<sup>&minus;</sup>):</strong><br/>
+                Each O atom (Group 6A) has 6 valence e<sup>&minus;</sup> &rarr; <strong>12 valence e<sup>&minus;</sup></strong> total.</p>
+
+                <p><strong>Step 2 (Ordering for Z &ge; 8):</strong><br/>
+                Large 2s–2p gap means &sigma;<sub>2p</sub> lies <em>below</em> &pi;<sub>2p</sub>.</p>
+
+                <p><strong>Step 3 (Fill 12 e<sup>&minus;</sup>):</strong><br/>
+                <span class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">(&sigma;<sub>2s</sub>)<sup>2</sup>(&sigma;*<sub>2s</sub>)<sup>2</sup>(&sigma;<sub>2p</sub>)<sup>2</sup>(&pi;<sub>2p</sub>)<sup>4</sup>(&pi;*<sub>2p</sub>)<sup>2</sup></span><br/>
+                By <strong>Hund's Rule</strong>, the last 2 electrons enter the two degenerate &pi;*<sub>2p</sub> orbitals <em>unpaired</em> with parallel spins (&uarr; &nbsp; &uarr;).</p>
+
+                <p><strong>Step 4 (Bond Order &amp; Magnetism):</strong><br/>
+                • BO = &frac12;(8 &minus; 4) = <strong>2.0</strong> (matches O=O double bond).<br/>
+                • <strong>2 unpaired e<sup>&minus;</sup> &rarr; Paramagnetic!</strong> MO theory explains both the double bond and magnetism simultaneously.</p>
+              </div>
+            </div>
+            <button onclick="loadSpecies('O2'); document.getElementById('module-3').scrollIntoView({behavior:'smooth'});" class="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-indigo-50 text-indigo-700 font-semibold text-xs transition">
+              Load O<sub>2</sub> in Explorer &uarr;
+            </button>
+          </article>
+
+          <!-- Worked Example 3 -->
+          <article class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800 text-xs font-bold">Worked Example 3</span>
+                <span class="text-xs font-mono text-slate-400">Z &le; 7</span>
+              </div>
+              <h4 class="text-lg font-bold text-slate-900">Comparing N<sub>2</sub> vs. N<sub>2</sub><sup>+</sup> Bond Strength</h4>
+              <div class="text-xs sm:text-sm text-slate-600 space-y-2.5 leading-relaxed">
+                <p><strong>Step 1 (Valence e<sup>&minus;</sup>):</strong><br/>
+                • N<sub>2</sub>: 5 + 5 = <strong>10 valence e<sup>&minus;</sup></strong><br/>
+                • N<sub>2</sub><sup>+</sup>: 10 &minus; 1 = <strong>9 valence e<sup>&minus;</sup></strong></p>
+
+                <p><strong>Step 2 &amp; 3 (Z &le; 7 Ordering with s–p mixing):</strong><br/>
+                Here &pi;<sub>2p</sub> is <em>below</em> &sigma;<sub>2p</sub>.<br/>
+                • N<sub>2</sub>: <span class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">(&sigma;<sub>2s</sub>)<sup>2</sup>(&sigma;*<sub>2s</sub>)<sup>2</sup>(&pi;<sub>2p</sub>)<sup>4</sup>(&sigma;<sub>2p</sub>)<sup>2</sup></span><br/>
+                • N<sub>2</sub><sup>+</sup>: removes 1 e<sup>&minus;</sup> from the HOMO (&sigma;<sub>2p</sub>) &rarr; <span class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">(&sigma;<sub>2p</sub>)<sup>1</sup></span></p>
+
+                <p><strong>Step 4 (Comparison):</strong><br/>
+                • BO(N<sub>2</sub>) = &frac12;(8 &minus; 2) = <strong>3.0</strong> (diamagnetic, 110 pm).<br/>
+                • BO(N<sub>2</sub><sup>+</sup>) = &frac12;(7 &minus; 2) = <strong>2.5</strong> (paramagnetic, 112 pm).<br/>
+                Removing a <em>bonding</em> electron weakens and lengthens the bond!</p>
+              </div>
+            </div>
+            <button onclick="loadSpecies('N2+'); document.getElementById('module-3').scrollIntoView({behavior:'smooth'});" class="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-indigo-50 text-indigo-700 font-semibold text-xs transition">
+              Load N<sub>2</sub><sup>+</sup> in Explorer &uarr;
+            </button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         MODULE 4: IN-CLASS PRACTICE & SELF-CHECK QUIZ
+    ====================================================================== -->
+    <section id="module-4" class="scroll-mt-20 space-y-8">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-l-4 border-amber-500 pl-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-600">Module 04 • Think-Pair-Share &amp; Self-Check</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-0.5">In-Class Practice Problems</h2>
+          <p class="text-slate-600 mt-1">Work through these 5 problems with your neighbor. Use the instant-check inputs or reveal the step-by-step solutions.</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm flex items-center gap-3 shrink-0">
+          <div class="text-xs font-semibold text-slate-500">Score:</div>
+          <div id="quiz-score-badge" class="font-mono font-extrabold text-base text-indigo-600">0 / 5 Solved</div>
+        </div>
+      </div>
+
+      <div id="practice-container" class="space-y-5">
+        <!-- Rendered dynamically by JS for clean state & instant checking -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 mt-16 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+      <div>
+        <strong class="text-slate-200">CHEM 101 Interactive Lecture Canvas</strong> • Molecular Orbital Theory Module
+      </div>
+      <div>
+        Tip: Use the <span class="text-indigo-400 font-semibold">MO Diagram Explorer</span> above to verify your electron configurations!
+      </div>
+    </div>
+  </footer>
+
+  <!-- =====================================================================
+       APPLICATION LOGIC & DATA
+  ====================================================================== -->
+  <script>
+    // -------------------------------------------------------------------------
+    // MODULE 1 DATA: VALENCE BOND LIMITATIONS
+    // -------------------------------------------------------------------------
+    const vbLimitations = [
+      {
+        badge: "Failure #1 • Classic Experimental Paradox",
+        title: "Paramagnetism of Dioxygen (O₂)",
+        vbPrediction: "Lewis & VB Theory draw O=O with 12 valence electrons arranged into 6 electron pairs (1 σ bond, 1 π bond, and 4 lone pairs). Because every single electron is paired, VB theory strictly predicts O₂ must be diamagnetic (repelled by magnets).",
+        experiment: "When liquid oxygen (b.p. −183 °C) is poured between the poles of a strong horseshoe magnet, the pale-blue liquid is trapped and suspended between the poles! Magnetic susceptibility measurements prove O₂ is paramagnetic with 2 unpaired electrons.",
+        moResolution: "MO Theory places the highest two electrons into two degenerate π*₂p antibonding orbitals. By Hund's Rule, they occupy separate orbitals with parallel spins (↑ ↑), yielding a bond order of 2 AND 2 unpaired electrons.",
+        svg: `
+          <svg viewBox="0 0 360 155" class="w-full h-auto">
+            <!-- VB Box -->
+            <rect x="8" y="8" width="162" height="138" rx="12" fill="#fff1f2" stroke="#fecdd3" />
+            <text x="89" y="28" text-anchor="middle" font-size="11" font-weight="700" fill="#9f1239">VB Theory Prediction</text>
+            <text x="89" y="64" text-anchor="middle" font-family="monospace" font-size="16" font-weight="700" fill="#1e293b">:Ö::Ö:</text>
+            <text x="89" y="88" text-anchor="middle" font-size="10.5" fill="#475569">All 12 e⁻ paired (↑↓)</text>
+            <rect x="28" y="102" width="122" height="28" rx="7" fill="#e11d48" />
+            <text x="89" y="120" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">Diamagnetic (WRONG)</text>
+
+            <!-- Experiment / MO Box -->
+            <rect x="188" y="8" width="164" height="138" rx="12" fill="#f0fdfa" stroke="#99f6e4" />
+            <text x="270" y="28" text-anchor="middle" font-size="11" font-weight="700" fill="#115e59">Experiment &amp; MO Theory</text>
+            <!-- Magnet poles -->
+            <rect x="212" y="44" width="22" height="44" rx="4" fill="#334155" />
+            <text x="223" y="70" text-anchor="middle" font-size="11" font-weight="700" fill="white">N</text>
+            <rect x="306" y="44" width="22" height="44" rx="4" fill="#dc2626" />
+            <text x="317" y="70" text-anchor="middle" font-size="11" font-weight="700" fill="white">S</text>
+            <!-- Suspended O2 droplet -->
+            <ellipse cx="270" cy="66" rx="26" ry="15" fill="#38bdf8" fill-opacity="0.7" stroke="#0284c7" stroke-width="1.5" />
+            <text x="270" y="69" text-anchor="middle" font-size="10" font-weight="700" fill="#0c4a6e">O₂ (↑ ↑)</text>
+            <rect x="208" y="102" width="124" height="28" rx="7" fill="#0d9488" />
+            <text x="270" y="120" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">Paramagnetic (2 unp. e⁻)</text>
+          </svg>
+        `
+      },
+      {
+        badge: "Failure #2 • Delocalized Pi Networks",
+        title: "Resonance Structures (Benzene, O₃, CO₃²⁻)",
+        vbPrediction: "Because VB theory forces every electron pair to live between just two atoms, it cannot draw a single valid picture for benzene (C₆H₆) or ozone (O₃). Instead, it draws alternating single and double bonds and invents 'resonance hybrids' to average them.",
+        experiment: "X-ray diffraction shows all six C–C bonds in benzene have the exact same intermediate length (139 pm—between a 154 pm single bond and a 134 pm double bond), and both O–O bonds in ozone are identical (128 pm).",
+        moResolution: "MO Theory naturally combines all six 2p orbitals in benzene into ring-shaped delocalized π molecular orbitals spanning all 6 carbons at once—yielding a uniform bond order of 1.5 without needing multiple drawings.",
+        svg: `
+          <svg viewBox="0 0 360 155" class="w-full h-auto">
+            <rect x="8" y="8" width="162" height="138" rx="12" fill="#fffbeb" stroke="#fde68a" />
+            <text x="89" y="28" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">VB Resonance Workaround</text>
+            <!-- Two Kekule hexagons -->
+            <polygon points="52,48 70,58 70,78 52,88 34,78 34,58" fill="none" stroke="#1e293b" stroke-width="1.8"/>
+            <line x1="52" y1="53" x2="65" y2="60" stroke="#1e293b" stroke-width="1.5"/>
+            <line x1="65" y1="76" x2="52" y2="83" stroke="#1e293b" stroke-width="1.5"/>
+            <line x1="39" y1="76" x2="39" y2="60" stroke="#1e293b" stroke-width="1.5"/>
+            <text x="89" y="72" text-anchor="middle" font-size="13" font-weight="700" fill="#b45309">↔</text>
+            <polygon points="126,48 144,58 144,78 126,88 108,78 108,58" fill="none" stroke="#1e293b" stroke-width="1.8"/>
+            <line x1="139" y1="60" x2="139" y2="76" stroke="#1e293b" stroke-width="1.5"/>
+            <line x1="126" y1="83" x2="113" y2="76" stroke="#1e293b" stroke-width="1.5"/>
+            <line x1="113" y1="60" x2="126" y2="53" stroke="#1e293b" stroke-width="1.5"/>
+            <text x="89" y="114" text-anchor="middle" font-size="10" fill="#78350f">Requires 2+ fictitious</text>
+            <text x="89" y="127" text-anchor="middle" font-size="10" fill="#78350f">localized structures</text>
+
+            <rect x="188" y="8" width="164" height="138" rx="12" fill="#eef2ff" stroke="#c7d2fe" />
+            <text x="270" y="28" text-anchor="middle" font-size="11" font-weight="700" fill="#3730a3">MO Delocalized Ring</text>
+            <polygon points="270,45 292,58 292,84 270,97 248,84 248,58" fill="#6366f1" fill-opacity="0.15" stroke="#4f46e5" stroke-width="2"/>
+            <circle cx="270" cy="71" r="14" fill="none" stroke="#0d9488" stroke-width="2.5" stroke-dasharray="3 2"/>
+            <text x="270" y="116" text-anchor="middle" font-size="10" font-weight="600" fill="#312e81">1 unified π cloud (BO = 1.5)</text>
+            <text x="270" y="129" text-anchor="middle" font-size="10" fill="#4338ca">All C–C bonds equal (139 pm)</text>
+          </svg>
+        `
+      },
+      {
+        badge: "Failure #3 • Non-Octet Electron Counts",
+        title: "Odd-Electron & Electron-Deficient Species",
+        vbPrediction: "VB theory is built around electron pairs (2-center, 2-electron bonds). It struggles to explain stable 1-electron bonds like H₂⁺, odd-electron radicals like nitric oxide (NO, 11 valence e⁻), or 3-center 2-electron bonds in diborane (B₂H₆).",
+        experiment: "Mass spectrometry and spectroscopy confirm that H₂⁺ is a genuine bound ion in the gas phase (bond dissociation energy = 255 kJ/mol, bond length = 106 pm), and NO is a stable biological signaling gas.",
+        moResolution: "MO Theory does not require electron pairs to define a bond! In H₂⁺, placing 1 electron in σ₁s yields Bond Order = ½(1 − 0) = 0.5—a valid half-bond. In NO (11 valence e⁻), MO gives Bond Order = 2.5 and 1 unpaired electron.",
+        svg: `
+          <svg viewBox="0 0 360 155" class="w-full h-auto">
+            <rect x="8" y="8" width="344" height="138" rx="12" fill="#faf5ff" stroke="#e9d5ff" />
+            <text x="180" y="28" text-anchor="middle" font-size="11.5" font-weight="700" fill="#6b21a8">Fractional Bond Orders in MO Theory</text>
+            
+            <!-- H2+ card -->
+            <rect x="24" y="42" width="144" height="90" rx="10" fill="#ffffff" stroke="#d8b4fe" />
+            <text x="96" y="61" text-anchor="middle" font-size="12" font-weight="700" fill="#1e293b">H₂⁺ Ion (1 e⁻)</text>
+            <text x="96" y="79" text-anchor="middle" font-family="monospace" font-size="11" fill="#4f46e5">(σ₁s)¹</text>
+            <text x="96" y="98" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0d9488">Bond Order = 0.5</text>
+            <text x="96" y="114" text-anchor="middle" font-size="9.5" fill="#64748b">BDE = 255 kJ/mol (Stable!)</text>
+
+            <!-- NO card -->
+            <rect x="192" y="42" width="144" height="90" rx="10" fill="#ffffff" stroke="#d8b4fe" />
+            <text x="264" y="61" text-anchor="middle" font-size="12" font-weight="700" fill="#1e293b">NO Radical (11 e⁻)</text>
+            <text x="264" y="79" text-anchor="middle" font-family="monospace" font-size="11" fill="#4f46e5">... (π₂p)⁴(σ₂p)²(π*₂p)¹</text>
+            <text x="264" y="98" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0d9488">Bond Order = 2.5</text>
+            <text x="264" y="114" text-anchor="middle" font-size="9.5" fill="#64748b">1 unpaired e⁻ (Paramagnetic)</text>
+          </svg>
+        `
+      },
+      {
+        badge: "Failure #4 • Spectroscopy & Photochemistry",
+        title: "Excited Electronic States & Molecular Color",
+        vbPrediction: "VB theory focuses almost exclusively on ground-state bonding pairs. Because it does not naturally generate vacant high-energy antibonding orbitals, it cannot quantitatively predict what wavelengths of UV or visible light a molecule absorbs.",
+        experiment: "Molecules absorb specific photons (E = hν) to promote electrons to higher energy states—the physical basis of UV-Vis spectroscopy, vision (retinal), photosynthesis (chlorophyll), and sunscreen.",
+        moResolution: "MO Theory defines the HOMO (Highest Occupied Molecular Orbital) and LUMO (Lowest Unoccupied Molecular Orbital). Photon absorption corresponds directly to a HOMO → LUMO electronic transition.",
+        svg: `
+          <svg viewBox="0 0 360 155" class="w-full h-auto">
+            <rect x="8" y="8" width="344" height="138" rx="12" fill="#f0f9ff" stroke="#bae6fd" />
+            <text x="180" y="28" text-anchor="middle" font-size="11.5" font-weight="700" fill="#075985">HOMO → LUMO Light Absorption (ΔE = hν)</text>
+            
+            <!-- LUMO line -->
+            <line x1="115" y1="54" x2="215" y2="54" stroke="#e11d48" stroke-width="3" stroke-linecap="round" />
+            <text x="225" y="58" font-size="10.5" font-weight="700" fill="#9f1239">LUMO (Vacant π*)</text>
+
+            <!-- Photon wave & arrow -->
+            <path d="M 65 82 Q 75 72, 85 82 T 105 82 T 125 82" fill="none" stroke="#f59e0b" stroke-width="2.2" />
+            <text x="58" y="74" font-size="10" font-weight="700" fill="#d97706">Photon hν</text>
+            <line x1="165" y1="108" x2="165" y2="60" stroke="#4f46e5" stroke-width="2.2" stroke-dasharray="3 2" />
+            <polygon points="165,56 161,64 169,64" fill="#4f46e5" />
+
+            <!-- HOMO line -->
+            <line x1="115" y1="114" x2="215" y2="114" stroke="#0d9488" stroke-width="3" stroke-linecap="round" />
+            <text x="225" y="118" font-size="10.5" font-weight="700" fill="#115e59">HOMO (Occupied π)</text>
+            <!-- Electron arrow on HOMO -->
+            <path d="M 155 121 L 155 106 M 152 109 L 155 106 L 158 109" stroke="#0f172a" stroke-width="2" fill="none"/>
+          </svg>
+        `
+      }
+    ];
+
+    function selectLimitation(index) {
+      // Update button styles
+      document.querySelectorAll('.lim-btn').forEach((btn, idx) => {
+        if (idx === index) {
+          btn.classList.remove('border', 'border-slate-200');
+          btn.classList.add('border-2', 'border-indigo-600', 'shadow-sm');
+        } else {
+          btn.classList.remove('border-2', 'border-indigo-600', 'shadow-sm');
+          btn.classList.add('border', 'border-slate-200');
+        }
+      });
+
+      const item = vbLimitations[index];
+      const container = document.getElementById('vb-limitation-detail');
+      container.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div class="lg:col-span-7 space-y-4">
+            <div class="inline-block px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wider">
+              ${item.badge}
+            </div>
+            <h4 class="text-xl font-extrabold text-slate-900">${item.title}</h4>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="p-3.5 rounded-xl bg-rose-50/70 border border-rose-100">
+                <span class="font-bold text-rose-900">1. What Valence Bond Theory Predicts:</span>
+                <p class="text-slate-700 mt-0.5">${item.vbPrediction}</p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-slate-100 border border-slate-200/80">
+                <span class="font-bold text-slate-900">2. What Experiments Actually Show:</span>
+                <p class="text-slate-700 mt-0.5">${item.experiment}</p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-teal-50/80 border border-teal-200">
+                <span class="font-bold text-teal-900">3. How MO Theory Solves It:</span>
+                <p class="text-slate-700 mt-0.5">${item.moResolution}</p>
+              </div>
+            </div>
+          </div>
+          <div class="lg:col-span-5 bg-slate-50 border border-slate-200 rounded-2xl p-4">
+            ${item.svg}
+          </div>
+        </div>
+      `;
+    }
+
+    // -------------------------------------------------------------------------
+    // MODULE 3 DATA: INTERACTIVE MO DIAGRAM EXPLORER
+    // -------------------------------------------------------------------------
+    // Period 1 orbitals: sigma_1s (b), sigma*_1s (ab)
+    // Period 2 (Z <= 7, s-p mixing): sigma_2s (b), sigma*_2s (ab), pi_2p [2 deg] (b), sigma_2p (b), pi*_2p [2 deg] (ab), sigma*_2p (ab)
+    // Period 2 (Z >= 8, no strong s-p mixing): sigma_2s (b), sigma*_2s (ab), sigma_2p (b), pi_2p [2 deg] (b), pi*_2p [2 deg] (ab), sigma*_2p (ab)
+
+    const speciesData = {
+      'H2': {
+        name: 'Dihydrogen (H₂)',
+        period: 1,
+        ordering: 'P1',
+        valenceElectrons: 2,
+        leftAtom: 'H (1s¹)',
+        rightAtom: 'H (1s¹)',
+        bondLength: '74 pm',
+        bondEnergy: '436 kJ/mol',
+        summary: 'Both electrons occupy the lowest-energy σ₁s bonding MO, giving a stable single covalent bond (BO = 1.0) and diamagnetic behavior.'
+      },
+      'H2+': {
+        name: 'Dihydrogen Cation (H₂⁺)',
+        period: 1,
+        ordering: 'P1',
+        valenceElectrons: 1,
+        leftAtom: 'H (1s¹)',
+        rightAtom: 'H⁺ (1s⁰)',
+        bondLength: '106 pm',
+        bondEnergy: '255 kJ/mol',
+        summary: 'A classic one-electron bond! With 1 electron in σ₁s, BO = 0.5. Notice the bond is longer (106 pm) and weaker (255 kJ/mol) than neutral H₂.'
+      },
+      'He2': {
+        name: 'Dihelium (He₂)',
+        period: 1,
+        ordering: 'P1',
+        valenceElectrons: 4,
+        leftAtom: 'He (1s²)',
+        rightAtom: 'He (1s²)',
+        bondLength: 'No bond',
+        bondEnergy: '0 kJ/mol',
+        summary: 'Two electrons in σ₁s (bonding) are completely canceled by two electrons in σ*₁s (antibonding). Bond order = 0, so He₂ does not exist as a stable molecule.'
+      },
+      'Li2': {
+        name: 'Dilithium (Li₂)',
+        period: 2,
+        ordering: 'Z<=7',
+        valenceElectrons: 2,
+        leftAtom: 'Li (2s¹)',
+        rightAtom: 'Li (2s¹)',
+        bondLength: '267 pm',
+        bondEnergy: '105 kJ/mol',
+        summary: 'Core 1s² electrons cancel out. The 2 valence electrons fill σ₂s, producing a weak, long single bond (BO = 1.0) observed in lithium vapor.'
+      },
+      'Be2': {
+        name: 'Diberyllium (Be₂)',
+        period: 2,
+        ordering: 'Z<=7',
+        valenceElectrons: 4,
+        leftAtom: 'Be (2s²)',
+        rightAtom: 'Be (2s²)',
+        bondLength: 'No stable bond',
+        bondEnergy: '~0 kJ/mol',
+        summary: 'With 2 electrons in σ₂s and 2 in σ*₂s, the formal bond order is ½(2 − 2) = 0. Be₂ is unstable under normal conditions.'
+      },
+      'B2': {
+        name: 'Diboron (B₂)',
+        period: 2,
+        ordering: 'Z<=7',
+        valenceElectrons: 6,
+        leftAtom: 'B (2s²2p¹)',
+        rightAtom: 'B (2s²2p¹)',
+        bondLength: '159 pm',
+        bondEnergy: '290 kJ/mol',
+        summary: 'Crucial test of s–p mixing! Because Z ≤ 7, the degenerate π₂p orbitals lie BELOW σ₂p. By Hund’s Rule, the two 2p electrons enter separate π₂p orbitals unpaired—making B₂ paramagnetic!'
+      },
+      'C2': {
+        name: 'Dicarbon (C₂)',
+        period: 2,
+        ordering: 'Z<=7',
+        valenceElectrons: 8,
+        leftAtom: 'C (2s²2p²)',
+        rightAtom: 'C (2s²2p²)',
+        bondLength: '131 pm',
+        bondEnergy: '602 kJ/mol',
+        summary: 'All 4 valence 2p electrons fill the two degenerate π₂p bonding orbitals! C₂ has a bond order of 2.0 consisting of TWO π bonds and zero σ net bond, and is diamagnetic.'
+      },
+      'N2': {
+        name: 'Dinitrogen (N₂)',
+        period: 2,
+        ordering: 'Z<=7',
+        valenceElectrons: 10,
+        leftAtom: 'N (2s²2p³)',
+        rightAtom: 'N (2s²2p³)',
+        bondLength: '110 pm',
+        bondEnergy: '945 kJ/mol',
+        summary: 'All bonding MOs from 2s and 2p (σ₂s, π₂p, σ₂p) are completely full while antibonding π*₂p and σ*₂p remain empty. Bond order = 3.0 (triple bond), explaining N₂’s extreme stability.'
+      },
+      'N2+': {
+        name: 'Dinitrogen Cation (N₂⁺)',
+        period: 2,
+        ordering: 'Z<=7',
+        valenceElectrons: 9,
+        leftAtom: 'N (2s²2p³)',
+        rightAtom: 'N⁺ (2s²2p²)',
+        bondLength: '112 pm',
+        bondEnergy: '841 kJ/mol',
+        summary: 'Ionizing N₂ removes 1 electron from the σ₂p bonding HOMO. Bond order drops from 3.0 to 2.5, lengthening the bond from 110 pm to 112 pm and making N₂⁺ paramagnetic.'
+      },
+      'O2': {
+        name: 'Dioxygen (O₂)',
+        period: 2,
+        ordering: 'Z>=8',
+        valenceElectrons: 12,
+        leftAtom: 'O (2s²2p⁴)',
+        rightAtom: 'O (2s²2p⁴)',
+        bondLength: '121 pm',
+        bondEnergy: '498 kJ/mol',
+        summary: 'With Z ≥ 8, σ₂p lies below π₂p. The 11th and 12th electrons occupy separate degenerate π*₂p antibonding orbitals (Hund’s Rule), giving BO = 2.0 and 2 unpaired electrons (paramagnetic).'
+      },
+      'O2+': {
+        name: 'Dioxygenyl Cation (O₂⁺)',
+        period: 2,
+        ordering: 'Z>=8',
+        valenceElectrons: 11,
+        leftAtom: 'O (2s²2p⁴)',
+        rightAtom: 'O⁺ (2s²2p³)',
+        bondLength: '112 pm',
+        bondEnergy: '643 kJ/mol',
+        summary: 'Removing an electron from an ANTIBONDING π*₂p orbital actually strengthens the bond! Bond order increases from 2.0 to 2.5, and the bond shortens from 121 pm to 112 pm.'
+      },
+      'O2-': {
+        name: 'Superoxide Ion (O₂⁻)',
+        period: 2,
+        ordering: 'Z>=8',
+        valenceElectrons: 13,
+        leftAtom: 'O (2s²2p⁴)',
+        rightAtom: 'O⁻ (2s²2p⁵)',
+        bondLength: '135 pm',
+        bondEnergy: '395 kJ/mol',
+        summary: 'Adding an extra electron places it into an ANTIBONDING π*₂p orbital. Bond order drops from 2.0 to 1.5, making the O–O bond longer (135 pm) and weaker than in neutral O₂.'
+      },
+      'F2': {
+        name: 'Difluorine (F₂)',
+        period: 2,
+        ordering: 'Z>=8',
+        valenceElectrons: 14,
+        leftAtom: 'F (2s²2p⁵)',
+        rightAtom: 'F (2s²2p⁵)',
+        bondLength: '142 pm',
+        bondEnergy: '159 kJ/mol',
+        summary: 'Both π*₂p antibonding orbitals are completely filled (4 antibonding π* electrons cancel 4 bonding π electrons), leaving a single σ₂p bond (BO = 1.0) and diamagnetism.'
+      },
+      'Ne2': {
+        name: 'Dineon (Ne₂)',
+        period: 2,
+        ordering: 'Z>=8',
+        valenceElectrons: 16,
+        leftAtom: 'Ne (2s²2p⁶)',
+        rightAtom: 'Ne (2s²2p⁶)',
+        bondLength: 'No bond',
+        bondEnergy: '0 kJ/mol',
+        summary: 'All 8 valence MOs are completely filled (8 bonding e⁻, 8 antibonding e⁻). Bond order = 0; neon remains a monatomic noble gas.'
+      },
+      'NO': {
+        name: 'Nitric Oxide (NO)',
+        period: 2,
+        ordering: 'Z>=8',
+        valenceElectrons: 11,
+        leftAtom: 'N (2s²2p³)',
+        rightAtom: 'O (2s²2p⁴)',
+        bondLength: '115 pm',
+        bondEnergy: '631 kJ/mol',
+        summary: 'Heteronuclear diatomic with 5 + 6 = 11 valence electrons (follows the Z ≥ 8 ordering). Ten electrons fill through π₂p, and the 11th sits alone in π*₂p → BO = 2.5 and paramagnetic!'
+      }
+    };
+
+    let currentSpeciesKey = 'O2';
+    let currentElectronCount = 12;
+
+    // Define orbital slots in Aufbau filling order for each scheme
+    function getOrbitalScheme(ordering) {
+      if (ordering === 'P1') {
+        return [
+          { id: 's1s', label: 'σ₁s', htmlLabel: '(&sigma;<sub>1s</sub>)', type: 'bonding', y: 295, slots: [{ x: 270 }] },
+          { id: 's1s_star', label: 'σ*₁s', htmlLabel: '(&sigma;*<sub>1s</sub>)', type: 'antibonding', y: 145, slots: [{ x: 270 }] }
+        ];
+      }
+      if (ordering === 'Z<=7') {
+        return [
+          { id: 's2s', label: 'σ₂s', htmlLabel: '(&sigma;<sub>2s</sub>)', type: 'bonding', y: 375, slots: [{ x: 270 }] },
+          { id: 's2s_star', label: 'σ*₂s', htmlLabel: '(&sigma;*<sub>2s</sub>)', type: 'antibonding', y: 308, slots: [{ x: 270 }] },
+          { id: 'p2p', label: 'π₂p', htmlLabel: '(&pi;<sub>2p</sub>)', type: 'bonding', y: 222, slots: [{ x: 228 }, { x: 312 }] },
+          { id: 's2p', label: 'σ₂p', htmlLabel: '(&sigma;<sub>2p</sub>)', type: 'bonding', y: 168, slots: [{ x: 270 }] },
+          { id: 'p2p_star', label: 'π*₂p', htmlLabel: '(&pi;*<sub>2p</sub>)', type: 'antibonding', y: 102, slots: [{ x: 228 }, { x: 312 }] },
+          { id: 's2p_star', label: 'σ*₂p', htmlLabel: '(&sigma;*<sub>2p</sub>)', type: 'antibonding', y: 44, slots: [{ x: 270 }] }
+        ];
+      }
+      // Z >= 8
+      return [
+        { id: 's2s', label: 'σ₂s', htmlLabel: '(&sigma;<sub>2s</sub>)', type: 'bonding', y: 375, slots: [{ x: 270 }] },
+        { id: 's2s_star', label: 'σ*₂s', htmlLabel: '(&sigma;*<sub>2s</sub>)', type: 'antibonding', y: 308, slots: [{ x: 270 }] },
+        { id: 's2p', label: 'σ₂p', htmlLabel: '(&sigma;<sub>2p</sub>)', type: 'bonding', y: 228, slots: [{ x: 270 }] },
+        { id: 'p2p', label: 'π₂p', htmlLabel: '(&pi;<sub>2p</sub>)', type: 'bonding', y: 172, slots: [{ x: 228 }, { x: 312 }] },
+        { id: 'p2p_star', label: 'π*₂p', htmlLabel: '(&pi;*<sub>2p</sub>)', type: 'antibonding', y: 102, slots: [{ x: 228 }, { x: 312 }] },
+        { id: 's2p_star', label: 'σ*₂p', htmlLabel: '(&sigma;*<sub>2p</sub>)', type: 'antibonding', y: 44, slots: [{ x: 270 }] }
+      ];
+    }
+
+    // Populate electrons obeying Aufbau + Pauli + Hund's Rule
+    function distributeElectrons(levels, totalE) {
+      let remaining = totalE;
+      // Each level has `slots` (1 for sigma, 2 for pi). Each slot holds up to 2 electrons (up then down).
+      const filled = levels.map(lvl => ({
+        ...lvl,
+        slotElectrons: lvl.slots.map(() => ({ up: false, down: false })),
+        count: 0
+      }));
+
+      for (const lvl of filled) {
+        if (remaining <= 0) break;
+        // Pass 1: Hund's Rule -> 1 spin-up electron in each degenerate slot
+        for (let s = 0; s < lvl.slots.length; s++) {
+          if (remaining > 0) {
+            lvl.slotElectrons[s].up = true;
+            lvl.count++;
+            remaining--;
+          }
+        }
+        // Pass 2: Pair with spin-down electrons
+        for (let s = 0; s < lvl.slots.length; s++) {
+          if (remaining > 0) {
+            lvl.slotElectrons[s].down = true;
+            lvl.count++;
+            remaining--;
+          }
+        }
+      }
+      return filled;
+    }
+
+    function loadSpecies(key) {
+      currentSpeciesKey = key;
+      const sp = speciesData[key];
+      currentElectronCount = sp.valenceElectrons;
+
+      // Update active button styling
+      document.querySelectorAll('.sp-btn').forEach(btn => {
+        if (btn.dataset.sp === key) {
+          btn.classList.remove('bg-slate-800');
+          btn.classList.add('bg-indigo-600', 'text-white', 'ring-2', 'ring-indigo-300');
+        } else {
+          btn.classList.remove('bg-indigo-600', 'text-white', 'ring-2', 'ring-indigo-300');
+          btn.classList.add('bg-slate-800');
+        }
+      });
+
+      renderMODiagram();
+    }
+
+    function stepElectrons(delta) {
+      const sp = speciesData[currentSpeciesKey];
+      const maxE = sp.period === 1 ? 4 : 16;
+      currentElectronCount = Math.max(0, Math.min(maxE, currentElectronCount + delta));
+      renderMODiagram();
+    }
+
+    function fillAllElectrons() {
+      currentElectronCount = speciesData[currentSpeciesKey].valenceElectrons;
+      renderMODiagram();
+    }
+
+    function clearElectrons() {
+      currentElectronCount = 0;
+      renderMODiagram();
+    }
+
+    function renderMODiagram() {
+      const sp = speciesData[currentSpeciesKey];
+      const levels = getOrbitalScheme(sp.ordering);
+      const populated = distributeElectrons(levels, currentElectronCount);
+
+      // Update header badge & s-p mixing note
+      const badge = document.getElementById('ordering-badge');
+      const note = document.getElementById('sp-mixing-note');
+      if (sp.ordering === 'P1') {
+        badge.textContent = 'Period 1: 1s Orbitals Only';
+        note.innerHTML = '<strong>Period 1 Diagram:</strong> Only 1s atomic orbitals are involved, forming one bonding MO (<strong>σ₁s</strong>) and one antibonding MO (<strong>σ*₁s</strong>). Maximum capacity = 4 electrons.';
+      } else if (sp.ordering === 'Z<=7') {
+        badge.textContent = 'Ordering: Z ≤ 7 (s–p Mixing Active)';
+        note.innerHTML = '<strong>Why is π₂p below σ₂p for Li₂ through N₂?</strong> In lighter Period 2 atoms (Z ≤ 7), the 2s and 2p atomic orbitals are close in energy. Interaction (<em>s–p mixing</em>) pushes σ₂p upward above the degenerate π₂p orbitals!';
+      } else {
+        badge.textContent = 'Ordering: Z ≥ 8 (Standard Order)';
+        note.innerHTML = '<strong>Why is σ₂p below π₂p for O₂, F₂, Ne₂ (and NO)?</strong> Higher effective nuclear charge (Z<sub>eff</sub>) pulls the 2s orbital much lower in energy than 2p, minimizing s–p mixing so σ₂p stays lower than π₂p.';
+      }
+
+      // Build SVG markup
+      const svg = document.getElementById('mo-diagram-svg');
+      let svgContent = `
+        <!-- Energy Axis on Far Left -->
+        <line x1="28" y1="395" x2="28" y2="30" stroke="#94a3b8" stroke-width="2" />
+        <polygon points="28,22 23,32 33,32" fill="#94a3b8" />
+        <text x="16" y="215" text-anchor="middle" transform="rotate(-90 16 215)" font-size="11" font-weight="700" fill="#64748b" letter-spacing="1">RELATIVE ENERGY</text>
+
+        <!-- Column Headers -->
+        <text x="90" y="22" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">Atomic Orbitals</text>
+        <text x="90" y="36" text-anchor="middle" font-size="10" font-weight="600" fill="#6366f1">${sp.leftAtom}</text>
+
+        <text x="270" y="22" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">Molecular Orbitals</text>
+
+        <text x="450" y="22" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">Atomic Orbitals</text>
+        <text x="450" y="36" text-anchor="middle" font-size="10" font-weight="600" fill="#6366f1">${sp.rightAtom}</text>
+      `;
+
+      // Draw AO reference levels & correlation dashed lines
+      if (sp.ordering === 'P1') {
+        // 1s AO bars at y = 220
+        svgContent += `
+          <line x1="65" y1="220" x2="115" y2="220" stroke="#64748b" stroke-width="2.5" />
+          <text x="90" y="236" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">1s</text>
+          <line x1="425" y1="220" x2="475" y2="220" stroke="#64748b" stroke-width="2.5" />
+          <text x="450" y="236" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">1s</text>
+
+          <!-- Dashed correlation lines -->
+          <line x1="115" y1="220" x2="242" y2="295" stroke="#cbd5e1" stroke-width="1.3" stroke-dasharray="4 3" />
+          <line x1="425" y1="220" x2="298" y2="295" stroke="#cbd5e1" stroke-width="1.3" stroke-dasharray="4 3" />
+          <line x1="115" y1="220" x2="242" y2="145" stroke="#cbd5e1" stroke-width="1.3" stroke-dasharray="4 3" />
+          <line x1="425" y1="220" x2="298" y2="145" stroke="#cbd5e1" stroke-width="1.3" stroke-dasharray="4 3" />
+        `;
+      } else {
+        // 2s AO bars at y = 342, 2p AO bars (3 degenerate) at y = 135
+        svgContent += `
+          <!-- 2s AOs -->
+          <line x1="65" y1="342" x2="115" y2="342" stroke="#64748b" stroke-width="2.5" />
+          <text x="90" y="358" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">2s</text>
+          <line x1="425" y1="342" x2="475" y2="342" stroke="#64748b" stroke-width="2.5" />
+          <text x="450" y="358" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">2s</text>
+
+          <!-- 2s correlation lines -->
+          <line x1="115" y1="342" x2="242" y2="375" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="3 3" />
+          <line x1="425" y1="342" x2="298" y2="375" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="3 3" />
+          <line x1="115" y1="342" x2="242" y2="308" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="3 3" />
+          <line x1="425" y1="342" x2="298" y2="308" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="3 3" />
+
+          <!-- 2p AOs (3 lines) -->
+          <line x1="52" y1="135" x2="74" y2="135" stroke="#64748b" stroke-width="2.5" />
+          <line x1="79" y1="135" x2="101" y2="135" stroke="#64748b" stroke-width="2.5" />
+          <line x1="106" y1="135" x2="128" y2="135" stroke="#64748b" stroke-width="2.5" />
+          <text x="90" y="152" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">2p</text>
+
+          <line x1="412" y1="135" x2="434" y2="135" stroke="#64748b" stroke-width="2.5" />
+          <line x1="439" y1="135" x2="461" y2="135" stroke="#64748b" stroke-width="2.5" />
+          <line x1="466" y1="135" x2="488" y2="135" stroke="#64748b" stroke-width="2.5" />
+          <text x="450" y="152" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">2p</text>
+
+          <!-- 2p correlation guide lines -->
+          <line x1="128" y1="135" x2="242" y2="44" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="3 3" />
+          <line x1="412" y1="135" x2="298" y2="44" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="3 3" />
+          <line x1="128" y1="135" x2="200" y2="102" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="3 3" />
+          <line x1="412" y1="135" x2="340" y2="102" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="3 3" />
+          <line x1="128" y1="135" x2="200" y2="225" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="3 3" />
+          <line x1="412" y1="135" x2="340" y2="225" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="3 3" />
+        `;
+      }
+
+      // Draw each MO energy bar and its electron arrows
+      for (const lvl of populated) {
+        const barColor = lvl.type === 'bonding' ? '#0d9488' : '#e11d48';
+        const textColor = lvl.type === 'bonding' ? '#115e59' : '#9f1239';
+
+        lvl.slots.forEach((slot, idx) => {
+          const x1 = slot.x - 28;
+          const x2 = slot.x + 28;
+          svgContent += `
+            <line x1="${x1}" y1="${lvl.y}" x2="${x2}" y2="${lvl.y}" stroke="${barColor}" stroke-width="3.2" stroke-linecap="round" />
+          `;
+
+          const eState = lvl.slotElectrons[idx];
+          if (eState.up) {
+            const ax = slot.x - 8;
+            svgContent += `
+              <path d="M ${ax} ${lvl.y + 10} L ${ax} ${lvl.y - 12} M ${ax - 4} ${lvl.y - 7} L ${ax} ${lvl.y - 12} L ${ax + 4} ${lvl.y - 7}" class="electron-up" />
+            `;
+          }
+          if (eState.down) {
+            const ax = slot.x + 8;
+            svgContent += `
+              <path d="M ${ax} ${lvl.y - 12} L ${ax} ${lvl.y + 10} M ${ax - 4} ${lvl.y + 5} L ${ax} ${lvl.y + 10} L ${ax + 4} ${lvl.y + 5}" class="electron-down" />
+            `;
+          }
+        });
+
+        // Label placement
+        const labelX = lvl.slots.length === 1 ? 310 : 350;
+        svgContent += `
+          <text x="${labelX}" y="${lvl.y + 4}" font-size="12" font-weight="700" fill="${textColor}">${lvl.label}</text>
+        `;
+      }
+
+      svg.innerHTML = svgContent;
+
+      // Calculate properties from populated orbitals
+      let bondingE = 0;
+      let antibondingE = 0;
+      let unpairedE = 0;
+      const configParts = [];
+
+      for (const lvl of populated) {
+        if (lvl.type === 'bonding') bondingE += lvl.count;
+        else antibondingE += lvl.count;
+
+        for (const se of lvl.slotElectrons) {
+          if (se.up && !se.down) unpairedE++;
+          if (!se.up && se.down) unpairedE++;
+        }
+
+        if (lvl.count > 0) {
+          configParts.push(`${lvl.htmlLabel}<sup>${lvl.count}</sup>`);
+        }
+      }
+
+      const bondOrder = 0.5 * (bondingE - antibondingE);
+
+      // Update Right Panel UI
+      document.getElementById('placed-count').textContent = currentElectronCount;
+      document.getElementById('target-count').textContent = sp.valenceElectrons;
+      document.getElementById('sp-title').innerHTML = sp.name;
+      document.getElementById('mo-config-display').innerHTML = configParts.length > 0 ? configParts.join(' ') : '<span class="text-slate-400">No electrons placed yet</span>';
+
+      document.getElementById('bonding-e-count').textContent = bondingE;
+      document.getElementById('antibonding-e-count').textContent = antibondingE;
+      document.getElementById('bond-order-value').textContent = bondOrder.toFixed(1);
+      document.getElementById('bond-order-math').innerHTML = `&frac12;(${bondingE} &minus; ${antibondingE}) = ${bondOrder}`;
+
+      const magCard = document.getElementById('magnetism-card');
+      const magVal = document.getElementById('magnetism-value');
+      const unpVal = document.getElementById('unpaired-count');
+      if (unpairedE > 0) {
+        magCard.className = 'p-3.5 rounded-xl bg-amber-50 border border-amber-200';
+        magVal.className = 'text-lg font-extrabold text-amber-900 mt-0.5';
+        magVal.textContent = 'Paramagnetic';
+        unpVal.className = 'text-[11px] font-semibold text-amber-700 mt-0.5';
+        unpVal.innerHTML = `${unpairedE} unpaired e<sup>&minus;</sup>`;
+      } else {
+        magCard.className = 'p-3.5 rounded-xl bg-sky-50 border border-sky-200';
+        magVal.className = 'text-lg font-extrabold text-sky-900 mt-0.5';
+        magVal.textContent = 'Diamagnetic';
+        unpVal.className = 'text-[11px] font-semibold text-sky-700 mt-0.5';
+        unpVal.innerHTML = `0 unpaired e<sup>&minus;</sup>`;
+      }
+
+      const pill = document.getElementById('stability-pill');
+      if (bondOrder > 0) {
+        pill.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800';
+        pill.textContent = `Stable (BO = ${bondOrder})`;
+      } else {
+        pill.className = 'px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800';
+        pill.textContent = 'Unstable (BO = 0)';
+      }
+
+      document.getElementById('exp-metrics').innerHTML = `
+        <span class="px-2.5 py-1 rounded-md bg-white border border-slate-200">Exp. Bond Length: <strong class="text-indigo-700">${sp.bondLength}</strong></span>
+        <span class="px-2.5 py-1 rounded-md bg-white border border-slate-200">Bond Energy: <strong class="text-indigo-700">${sp.bondEnergy}</strong></span>
+      `;
+      document.getElementById('sp-interpretation').textContent = sp.summary;
+    }
+
+    // -------------------------------------------------------------------------
+    // MODULE 4 DATA: IN-CLASS PRACTICE PROBLEMS
+    // -------------------------------------------------------------------------
+    const practiceProblems = [
+      {
+        id: 1,
+        tag: "Problem 1 • s–p Mixing & Hund's Rule",
+        prompt: "Diboron (B₂) is observed experimentally to be paramagnetic. Construct its valence MO diagram (remembering Z ≤ 7). What is the Bond Order of B₂, and how many unpaired electrons does it have?",
+        options: [
+          { label: "BO = 1.0, 0 unpaired e⁻ (Diamagnetic)", correct: false },
+          { label: "BO = 1.0, 2 unpaired e⁻ (Paramagnetic)", correct: true },
+          { label: "BO = 2.0, 2 unpaired e⁻ (Paramagnetic)", correct: false },
+          { label: "BO = 0.5, 1 unpaired e⁻ (Paramagnetic)", correct: false }
+        ],
+        hint: "Boron is in Group 3A (3 valence electrons each → 6 total). Because Z = 5 (≤ 7), π₂p is LOWER in energy than σ₂p!",
+        solution: `
+          <strong>Step 1:</strong> Total valence electrons = 3 + 3 = <strong>6 valence e⁻</strong>.<br/>
+          <strong>Step 2:</strong> Since Z ≤ 7, the filling order is σ₂s, σ*₂s, <strong>π₂p</strong>, σ₂p.<br/>
+          <strong>Step 3:</strong> Configuration: <span class="font-mono bg-slate-100 px-1 rounded">(σ₂s)² (σ*₂s)² (π₂p)²</span>. By Hund's rule, the two electrons in the degenerate π₂p orbitals occupy separate orbitals with parallel spins (↑ &nbsp; ↑).<br/>
+          <strong>Step 4:</strong> Bond Order = ½(4 bonding − 2 antibonding) = <strong>1.0</strong>, with <strong>2 unpaired electrons</strong> (paramagnetic). (If s–p mixing didn't happen, σ₂p would be lower and B₂ would wrongly be predicted diamagnetic!)
+        `
+      },
+      {
+        id: 2,
+        tag: "Problem 2 • Bond Order vs. Bond Length Trend",
+        prompt: "Rank the following three oxygen species in order of INCREASING O–O bond length (shortest bond to longest bond): O₂, O₂⁺, and O₂⁻ (superoxide).",
+        options: [
+          { label: "O₂⁻ < O₂ < O₂⁺", correct: false },
+          { label: "O₂ < O₂⁺ < O₂⁻", correct: false },
+          { label: "O₂⁺ < O₂ < O₂⁻", correct: true },
+          { label: "O₂⁺ < O₂⁻ < O₂", correct: false }
+        ],
+        hint: "Calculate the bond order of each species (O₂ has 12 valence e⁻, O₂⁺ has 11, O₂⁻ has 13). Remember: higher bond order = shorter bond!",
+        solution: `
+          <strong>1. O₂⁺ (11 valence e⁻):</strong> Removes 1 e⁻ from antibonding π*₂p → BO = ½(8 − 3) = <strong>2.5</strong> (Shortest: 112 pm).<br/>
+          <strong>2. O₂ (12 valence e⁻):</strong> Neutral molecule → BO = ½(8 − 4) = <strong>2.0</strong> (Intermediate: 121 pm).<br/>
+          <strong>3. O₂⁻ (13 valence e⁻):</strong> Adds 1 e⁻ to antibonding π*₂p → BO = ½(8 − 5) = <strong>1.5</strong> (Longest: 135 pm).<br/>
+          <strong>Correct Order (Shortest → Longest):</strong> <strong>O₂⁺ &lt; O₂ &lt; O₂⁻</strong>.
+        `
+      },
+      {
+        id: 3,
+        tag: "Problem 3 • Predicting Ion Stability",
+        prompt: "Neutral Be₂ does not exist as a stable molecule (BO = 0). What happens if you remove one electron to form the Be₂⁺ cation? Predict its bond order and stability.",
+        options: [
+          { label: "BO = 0.5; Be₂⁺ is weakly bound and paramagnetic", correct: true },
+          { label: "BO = 0; Be₂⁺ is still completely unstable", correct: false },
+          { label: "BO = 1.0; Be₂⁺ forms a full single bond", correct: false },
+          { label: "BO = 1.5; Be₂⁺ is diamagnetic", correct: false }
+        ],
+        hint: "Be₂ has 4 valence electrons: (σ₂s)²(σ*₂s)². Removing 1 electron takes it out of the highest occupied orbital (σ*₂s).",
+        solution: `
+          <strong>1. Valence electrons in Be₂⁺:</strong> 2 + 2 − 1 = <strong>3 valence e⁻</strong>.<br/>
+          <strong>2. MO Configuration:</strong> <span class="font-mono bg-slate-100 px-1 rounded">(σ₂s)² (σ*₂s)¹</span>.<br/>
+          <strong>3. Bond Order:</strong> ½(2 bonding − 1 antibonding) = <strong>0.5</strong>.<br/>
+          Because the electron was removed from an <em>antibonding</em> orbital, Be₂⁺ has a net half-bond (BO = 0.5) and is observable in the gas phase!
+        `
+      },
+      {
+        id: 4,
+        tag: "Problem 4 • Acetylide Ion (C₂²⁻) vs. C₂",
+        prompt: "Calcium carbide (CaC₂) contains the acetylide ion, C₂²⁻. Compared to neutral C₂ (8 valence e⁻), how do the bond order and magnetism change when forming C₂²⁻ (10 valence e⁻)?",
+        options: [
+          { label: "BO increases from 2.0 to 3.0; remains diamagnetic", correct: true },
+          { label: "BO decreases from 2.0 to 1.0; becomes paramagnetic", correct: false },
+          { label: "BO increases from 2.0 to 3.0; becomes paramagnetic", correct: false },
+          { label: "BO stays 2.0; remains diamagnetic", correct: false }
+        ],
+        hint: "C₂²⁻ is isoelectronic with N₂ (10 valence electrons)! Where do the two added electrons go in the Z ≤ 7 diagram?",
+        solution: `
+          <strong>1. Neutral C₂ (8 valence e⁻):</strong> <span class="font-mono bg-slate-100 px-1 rounded">(σ₂s)²(σ*₂s)²(π₂p)⁴</span> → BO = ½(6 − 2) = <strong>2.0</strong>, 0 unpaired e⁻ (diamagnetic).<br/>
+          <strong>2. Acetylide C₂²⁻ (10 valence e⁻):</strong> The 2 added electrons fill the bonding <strong>σ₂p</strong> orbital: <span class="font-mono bg-slate-100 px-1 rounded">(σ₂s)²(σ*₂s)²(π₂p)⁴(σ₂p)²</span>.<br/>
+          <strong>3. Result:</strong> BO increases to ½(8 − 2) = <strong>3.0</strong> (triple bond, matching [:C≡C:]²⁻) and all electrons remain paired (<strong>diamagnetic</strong>).
+        `
+      },
+      {
+        id: 5,
+        tag: "Problem 5 • Conceptual Synthesis (VB vs. MO)",
+        prompt: "Nitric oxide (NO, 11 valence e⁻) is a vital vasodilator in human physiology. Which statement best explains why MO Theory describes NO better than Valence Bond Theory?",
+        options: [
+          { label: "VB theory predicts NO has a quadruple bond, whereas MO predicts a single bond.", correct: false },
+          { label: "MO theory accommodates an odd number of electrons without violating octets, predicting BO = 2.5 and 1 unpaired electron in π*₂p.", correct: true },
+          { label: "MO theory shows NO is diamagnetic because all 11 electrons pair up in σ orbitals.", correct: false },
+          { label: "VB theory cannot draw any covalent bonds between nitrogen and oxygen.", correct: false }
+        ],
+        hint: "Count the total valence electrons in NO (5 from N + 6 from O = 11). Can any Lewis/VB structure give both atoms an octet with an odd electron count?",
+        solution: `
+          <strong>Why MO wins for NO:</strong> With 5 + 6 = <strong>11 valence electrons</strong>, any Lewis/VB structure leaves an incomplete octet on one atom and struggles to represent a "2.5" bond.<br/>
+          In MO Theory, 10 electrons fill through σ₂p and π₂p, and the 11th electron enters π*₂p: <span class="font-mono bg-slate-100 px-1 rounded">(σ₂s)²(σ*₂s)²(σ₂p)²(π₂p)⁴(π*₂p)¹</span>.<br/>
+          This directly predicts <strong>Bond Order = ½(8 − 3) = 2.5</strong> and <strong>1 unpaired electron</strong> (paramagnetic).
+        `
+      }
+    ];
+
+    const solvedSet = new Set();
+
+    function renderPracticeProblems() {
+      const container = document.getElementById('practice-container');
+      container.innerHTML = practiceProblems.map((prob, pIdx) => `
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4" id="prob-card-${prob.id}">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="px-3 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold">
+              ${prob.tag}
+            </span>
+            <span id="prob-status-${prob.id}" class="text-xs font-semibold text-slate-400">Unsolved</span>
+          </div>
+
+          <p class="text-slate-900 font-semibold text-sm sm:text-base leading-relaxed">
+            ${prob.prompt}
+          </p>
+
+          <!-- Multiple Choice Options -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            ${prob.options.map((opt, oIdx) => `
+              <button onclick="checkAnswer(${prob.id}, ${oIdx})" id="opt-${prob.id}-${oIdx}"
+                class="text-left p-3.5 rounded-xl border border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/40 text-xs sm:text-sm font-medium text-slate-700 transition flex items-center justify-between gap-2">
+                <span>${opt.label}</span>
+                <span class="opt-icon font-bold text-sm"></span>
+              </button>
+            `).join('')}
+          </div>
+
+          <!-- Hint & Solution Controls -->
+          <div class="flex flex-wrap items-center gap-3 pt-1">
+            <button onclick="toggleDrawer('hint-${prob.id}')" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+              <span>💡 Show / Hide Hint</span>
+            </button>
+            <span class="text-slate-300">|</span>
+            <button onclick="toggleDrawer('sol-${prob.id}')" class="text-xs font-semibold text-teal-700 hover:text-teal-900 flex items-center gap-1">
+              <span>📖 Show / Hide Step-by-Step Solution</span>
+            </button>
+          </div>
+
+          <!-- Collapsible Hint -->
+          <div id="hint-${prob.id}" class="hidden p-3.5 rounded-xl bg-indigo-50/70 border border-indigo-100 text-xs sm:text-sm text-indigo-950">
+            <strong>Hint:</strong> ${prob.hint}
+          </div>
+
+          <!-- Collapsible Solution -->
+          <div id="sol-${prob.id}" class="hidden p-4 rounded-xl bg-teal-50/70 border border-teal-200 text-xs sm:text-sm text-slate-800 leading-relaxed space-y-1">
+            <div class="font-bold text-teal-900 mb-1">Worked Solution:</div>
+            <div>${prob.solution}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function checkAnswer(probId, optIdx) {
+      const prob = practiceProblems.find(p => p.id === probId);
+      const chosen = prob.options[optIdx];
+      const statusEl = document.getElementById(`prob-status-${probId}`);
+
+      // Reset option styles for this question
+      prob.options.forEach((_, idx) => {
+        const btn = document.getElementById(`opt-${probId}-${idx}`);
+        btn.classList.remove('bg-emerald-50', 'border-emerald-500', 'text-emerald-900', 'bg-rose-50', 'border-rose-500', 'text-rose-900');
+        btn.querySelector('.opt-icon').textContent = '';
+      });
+
+      const chosenBtn = document.getElementById(`opt-${probId}-${optIdx}`);
+      if (chosen.correct) {
+        chosenBtn.classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-900');
+        chosenBtn.querySelector('.opt-icon').textContent = '✓';
+        statusEl.innerHTML = '<span class="text-emerald-600 font-bold">✓ Correct!</span>';
+        solvedSet.add(probId);
+        // Automatically reveal solution on correct answer for reinforcement
+        document.getElementById(`sol-${probId}`).classList.remove('hidden');
+      } else {
+        chosenBtn.classList.add('bg-rose-50', 'border-rose-500', 'text-rose-900');
+        chosenBtn.querySelector('.opt-icon').textContent = '✕';
+        statusEl.innerHTML = '<span class="text-rose-600 font-bold">Try again or check hint</span>';
+      }
+
+      document.getElementById('quiz-score-badge').textContent = `${solvedSet.size} / ${practiceProblems.length} Solved`;
+    }
+
+    function toggleDrawer(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('hidden');
+    }
+
+    // -------------------------------------------------------------------------
+    // SCROLL PROGRESS BAR
+    // -------------------------------------------------------------------------
+    window.addEventListener('scroll', () => {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? Math.min(100, Math.max(5, (window.scrollY / docHeight) * 100)) : 100;
+      const bar = document.getElementById('scroll-progress');
+      if (bar) bar.style.width = `${pct}%`;
+    });
+
+    // -------------------------------------------------------------------------
+    // INITIALIZE PAGE ON LOAD
+    // -------------------------------------------------------------------------
+    window.addEventListener('DOMContentLoaded', () => {
+      selectLimitation(0);
+      loadSpecies('O2');
+      renderPracticeProblems();
+    });
+  </script>
+</body>
+</html>
